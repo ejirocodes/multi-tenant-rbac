@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/main.ts"
+    "dev": "tsx watch src/main.ts",
+    "migrate": "drizzle-kit generate:pg"
   },
   "dependencies": {
     "argon2": "^0.31.1",
