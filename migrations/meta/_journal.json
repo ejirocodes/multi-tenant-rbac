@@ -8,6 +8,13 @@
       "when": 1698085240567,
       "tag": "0000_freezing_johnny_blaze",
       "breakpoints": false
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1698087307307,
+      "tag": "0001_nebulous_jackal",
+      "breakpoints": false
     }
   ]
 }
