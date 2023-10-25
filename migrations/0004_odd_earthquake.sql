@@ -1,0 +1,1 @@
+ALTER TABLE "userToRole" ADD CONSTRAINT "userToRole_applicationId_roleId_userId" PRIMARY KEY("applicationId","roleId","userId");
