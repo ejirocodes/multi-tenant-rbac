@@ -10,6 +10,7 @@ export async function createApplicationHandler(
 ) {
   const { name } = request.body;
 
-  const application = createApplication({ name });
-  reply.send({ application });
+  const application = await createApplication({ name });
+
+  reply.send(application);
 }

@@ -10,5 +10,5 @@ export async function applicationRoute(app: FastifyInstance) {
     },
     createApplicationHandler
   );
-  app.get("/", () => {});
+  app.get("/", () => ({ status: "ok" }));
 }
