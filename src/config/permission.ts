@@ -14,7 +14,10 @@ export const PERMISSIONS = ALL_PERMISSIONS.reduce((acc, permission) => {
   return acc;
 }, {} as Record<(typeof ALL_PERMISSIONS)[number], (typeof ALL_PERMISSIONS)[number]>);
 
-export const USER_ROLE = [PERMISSIONS["post:read"], PERMISSIONS["post:write"]];
+export const USER_ROLE_PERMISSION = [
+  PERMISSIONS["post:read"],
+  PERMISSIONS["post:write"],
+];
 
 export const SYSTEM_ROLES = {
   SUPER_ADMIN: "SUPER_ADMIN",
