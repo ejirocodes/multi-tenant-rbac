@@ -18,5 +18,5 @@ export async function getApplication() {
       createdAt: application.createdAt,
     })
     .from(application);
-  return result[0];
+  return result;
 }

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { createApplicationBody } from "./application.schema";
-import { createApplication } from "./application.service";
+import { createApplication, getApplication } from "./application.service";
 import { createRole } from "../roles/roles.service";
 import {
   ALL_PERMISSIONS,
@@ -48,4 +48,8 @@ export async function createApplicationHandler(
     superAdminRole: superAdminRole.value,
     applicationUserRole: applicationUserRole.value,
   });
+}
+
+export async function getApplicationsHandler() {
+  return await getApplication();
 }
