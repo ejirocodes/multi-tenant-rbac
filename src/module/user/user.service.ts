@@ -1,3 +1,4 @@
+import { application } from "./../../db/schema";
 import { InferInsertModel, and, eq } from "drizzle-orm";
 import { db } from "../../db";
 import { role, user, userToRole } from "../../db/schema";
@@ -41,4 +42,61 @@ export async function assignRoleToUser(
   const result = await db.insert(userToRole).values(data).returning();
 
   return result[0];
+}
+
+export async function getUserByEmail({
+  email,
+  applicationId,
+}: {
+  email: string;
+  applicationId: string;
+}) {
+  const result = await db
+    .select({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      applicationId: user.applicationId,
+      roleId: role.id,
+      password: user.password,
+      permissions: role.permissions,
+    })
+    .from(user)
+    .where(and(eq(user.email, email), eq(user.applicationId, applicationId)))
+    .leftJoin(
+      userToRole,
+      and(
+        eq(userToRole.userId, user.id),
+        eq(userToRole.applicationId, applicationId)
+      )
+    )
+    .leftJoin(role, eq(role.id, userToRole.roleId));
+
+  const users = result.reduce((acc, curr) => {
+    if (!acc.id) {
+      return {
+        ...curr,
+        permissions: new Set(curr.permissions),
+      };
+    }
+
+    if (!curr.permissions) {
+      return acc;
+    }
+
+    for (const permission of curr.permissions) {
+      acc.permissions.add(permission);
+    }
+
+    return acc;
+  }, {} as Omit<(typeof result)[number], "permissions"> & { permissions: Set<string> });
+
+  if (!result.length) {
+    return null;
+  }
+
+  return {
+    ...users,
+    permissions: Array.from(users.permissions),
+  };
 }

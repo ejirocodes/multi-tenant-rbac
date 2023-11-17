@@ -1,12 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createUserBody } from "./user.schema";
+import { createUserBody, loginBody } from "./user.schema";
 import { SYSTEM_ROLES } from "../../config/permission";
 import { getRoleByName } from "../roles/roles.service";
 import {
   assignRoleToUser,
   createUser,
   getUserByApplication,
+  getUserByEmail,
 } from "./user.service";
+import { generateJwToken } from "../../util/token.util";
 
 export async function createUserHandler(
   request: FastifyRequest<{ Body: createUserBody }>,
@@ -59,4 +61,33 @@ export async function createUserHandler(
   } catch (error) {}
 
   reply.send(role);
+}
+
+export async function loginHandler(
+  request: FastifyRequest<{ Body: loginBody }>,
+  reply: FastifyReply
+) {
+  const { email, password, applicationId } = request.body;
+
+  const user = await getUserByEmail({ email, applicationId });
+
+  if (!user) {
+    return reply.status(400).send({
+      message: "Invalid email or password",
+      extensions: {
+        code: "INVALID_CREDENTIALS",
+      },
+    });
+  }
+
+  const token = generateJwToken({
+    email,
+    applicationId,
+    scopes: user.permissions,
+    id: user.id,
+  });
+
+  return {
+    token,
+  };
 }
